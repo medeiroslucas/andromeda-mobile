@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, Text, ScrollView } from 'react-native';
-import SmallCard from '../components/SmallCard';
+import SmallAstroCard from '../../components/SmallAstroCard';
 
 import { styles } from './styles';
 
@@ -15,60 +15,60 @@ export default function Home() {
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>Planetas</Text>
             <ScrollView horizontal>
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
             </ScrollView>
           </View>
 
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>Satélites</Text>
             <ScrollView horizontal>
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
             </ScrollView>
           </View>
 
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>Cometas</Text>
             <ScrollView horizontal>
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
             </ScrollView>
           </View>
 
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>Planetas</Text>
             <ScrollView horizontal>
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
             </ScrollView>
           </View>
 
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>Planetas</Text>
             <ScrollView horizontal>
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
-              <SmallCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
+              <SmallAstroCard />
             </ScrollView>
           </View>
       </ScrollView>

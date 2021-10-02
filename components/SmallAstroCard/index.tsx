@@ -3,7 +3,7 @@ import { Text, View, Image } from 'react-native';
 
 import { styles } from './styles';
 
-export default function SmallCard() {
+export default function SmallAstroCard() {
   return (
     <View style={styles.card}>
         <View style={styles.images}>
