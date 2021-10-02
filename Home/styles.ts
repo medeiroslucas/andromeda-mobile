@@ -30,10 +30,11 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
     marginTop: 32,
+    marginBottom: 24
   },
 
   categoryContainer: {
-    marginTop: 24
+    marginBottom: 24
   },
 
   categoryTitle: {

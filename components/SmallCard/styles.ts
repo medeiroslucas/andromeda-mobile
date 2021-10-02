@@ -11,7 +11,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#141A26',
     borderRadius: 8,
     overflow: 'hidden',
-    padding: 8
+    padding: 8,
+    marginRight: 12
   },
 
   images: {
