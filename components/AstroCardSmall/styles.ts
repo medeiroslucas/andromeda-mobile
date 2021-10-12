@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     width: 136,
   },
 
-  aim: {
+  gps: {
     height: 24,
     width: 24,
   },

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, Text, ScrollView, Image, TextInput, Pressable  } from 'react-native';
+import { Search as SearchIcon } from 'react-native-feather';
 
 import AstroCardLarge from './../../components/AstroCardLarge';
 import { styles } from './styles';
@@ -13,7 +14,7 @@ export default function Search() {
 
           <View style={styles.search}>
             <TextInput style={styles.searchInput} placeholder="Pesquise um astro" placeholderTextColor="white"/>
-            <Image source={require("../../assets/search.svg")} style={styles.searchIcon}/>
+            <SearchIcon style={styles.searchIcon} />
           </View>
 
           <View style={styles.filtersSection}>

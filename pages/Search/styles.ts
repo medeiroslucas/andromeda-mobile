@@ -30,20 +30,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.20)',
     marginVertical: 24,
     paddingHorizontal: 8,
     borderRadius: 8,
   },
-
+  
   searchInput: {
     height: 48,
-    width: '100%',
+    flex: 1,
+    color: '#fff'
   },
 
   searchIcon: {
-    height: 24,
-    width: 24
+    color: '#fff',
+    marginLeft: 8
   },
 
   filtersSection: {

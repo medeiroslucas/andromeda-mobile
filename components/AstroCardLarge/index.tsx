@@ -11,7 +11,7 @@ export default function AstroCardLarge() {
             <Text style={styles.astroTitle}>Mercúrio</Text>
             <Text style={styles.astroVisibility}>Visível da sua localização</Text>
         </View>
-        <Image source={require("../../assets/aim.png")} style={styles.aim} />
+        <Image source={require("../../assets/gps.png")} style={styles.aim} />
     </View>
   );
 }
