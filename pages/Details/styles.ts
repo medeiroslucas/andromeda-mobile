@@ -14,7 +14,8 @@ export const styles = StyleSheet.create({
 
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingBottom: 16
     },
 
     infoDatetime: {
@@ -49,6 +50,7 @@ export const styles = StyleSheet.create({
         height: '100%',
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
+        paddingBottom: 40
     },
 
     astroTitle: {
@@ -91,7 +93,8 @@ export const styles = StyleSheet.create({
     
     astroBirth: {
         color: '#fff',
-        fontWeight: '500'
+        fontWeight: '500',
+        marginBottom: 8
     },
 
     astroGalery: {
@@ -100,12 +103,14 @@ export const styles = StyleSheet.create({
 
     astroGaleryTitle: {
         color: '#fff',
-        fontSize: 18,,
+        fontSize: 18,
         marginBottom: 8
     },
 
     astroGaleryImage: {
         width: 160,
-        marginRight: 20
+        height: 120,
+        marginRight: 16,
+        borderRadius: 8
     }
 });
