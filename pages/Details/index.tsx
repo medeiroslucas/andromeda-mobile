@@ -4,16 +4,10 @@ import { ArrowLeft, RotateCw } from 'react-native-feather';
 
 import { styles } from './styles';
 
-export default function Details({ route, navigation } : any) {
-    const back = route.params.previousScreen
-
-    const astro = route.params.astro
+export default function Details({ navigation }: any) {
     const azm = "+143º 12’ 38.64’’"
     const alt = "+16º 29’ 55.70’’"
 
-    console.log(astro)
-    console.log(azm)
-    console.log(alt)
     return(
         <ImageBackground 
             source={{uri: "https://andromeda-pi2.s3.sa-east-1.amazonaws.com/background.png"}} 
@@ -22,11 +16,11 @@ export default function Details({ route, navigation } : any) {
         >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableHighlight onPress={() => navigation.navigate(back)}>
+                    <TouchableHighlight onPress={() => navigation.goBack()}>
                       <ArrowLeft color="white"/>
                     </TouchableHighlight>
-                    <Text style={styles.infoDatetime}>21/09/2021 8:00</Text>
-                    <RotateCw color="white"/>
+                    {/* <Text style={styles.infoDatetime}>21/09/2021 8:00</Text>
+                    <RotateCw color="white"/> */}
                 </View>
             </View>
             <ScrollView>
@@ -38,7 +32,7 @@ export default function Details({ route, navigation } : any) {
 
                 <View style={styles.astroInfo}>
                     <View style={styles.container}>
-                        <Text style={styles.astroTitle}>{astro}</Text>
+                        {/* <Text style={styles.astroTitle}>{astro}</Text> */}
                         <View style={styles.astroDescription}>
                             <Text style={styles.astroCategory}>Planeta</Text>
                             <View style={styles.astroDistance}>

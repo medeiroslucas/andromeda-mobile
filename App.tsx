@@ -6,8 +6,36 @@ import { Search as SearchIcon, Home as HomeIcon } from 'react-native-feather';
 import Search from './pages/Search';
 import Home from './pages/Home';
 import Details from './pages/Details';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function HomeStack() {  
+  return (    
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false, 
+      }}
+    >      
+      <Stack.Screen name="Início" component={Home} />  
+      <Stack.Screen name="Detalhes" component={Details} />  
+    </Stack.Navigator>  
+  );
+}
+
+function SearchStack() {  
+  return (    
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false, 
+      }}
+    >      
+      <Stack.Screen name="Buscar" component={Search} />  
+      <Stack.Screen name="Details" component={Details} />  
+    </Stack.Navigator>  
+  );
+}
 
 export default function App() {
   return (
@@ -17,22 +45,12 @@ export default function App() {
         <Tab.Navigator
           initialRouteName="Início"
           screenOptions={{
-            headerShown: false,
-            // tabBarBackground: () => (
-            
-        }}>
-          <Tab.Screen
-            name="Detalhes" 
-            component={Details}
-            options={{
-              tabBarIcon: () => (
-                <SearchIcon color="black" />
-              ),
-            }} 
-          />
+            headerShown: false, 
+          }}
+        >
           <Tab.Screen 
             name="Início" 
-            component={Home}
+            component={HomeStack}
             options={{
               tabBarIcon: () => (
                 <HomeIcon color="black" />
@@ -41,7 +59,7 @@ export default function App() {
           />
           <Tab.Screen 
             name="Buscar" 
-            component={Search}
+            component={SearchStack}
             options={{
               tabBarIcon: () => (
                 <SearchIcon color="black" />

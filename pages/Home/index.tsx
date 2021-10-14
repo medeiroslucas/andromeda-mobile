@@ -23,7 +23,7 @@ const translate: Record<string, string> = {
   "satellite": "Satélite",
 }
 
-export default function Home({ navigation } : any) {
+export default function Home({ navigation }: any) {
   const emptyList: emptyListType = [];
   const emptyCoord = {}
 
@@ -47,7 +47,7 @@ export default function Home({ navigation } : any) {
 
   const renderItem = ({ item } : {item: string}) => {
     return (
-      <TouchableHighlight onPress={() => navigation.navigate('Detalhes', {astro: translate[item], previousScreen: 'Início'})}>
+      <TouchableHighlight onPress={() => navigation.navigate('Detalhes')}>
         <AstroCardSmall astro={translate[item]}/>
       </TouchableHighlight>
     );
