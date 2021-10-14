@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, TouchableHighlight } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TouchableOpacity } from 'react-native';
 import AstroCardSmall from '../../components/AstroCardSmall';
 import { getLocation } from '../../services/getLocation';
 import { getAstros } from '../../services/getAstros';
@@ -28,9 +28,9 @@ export default function Home({ navigation }: any) {
 
   const renderItem = (astro: Astro) => {
     return (
-      <TouchableHighlight key={astro.name} onPress={() => navigation.navigate('Detalhes', { astro })}>
+      <TouchableOpacity key={astro.name} onPress={() => navigation.navigate('Detalhes', { astro })}>
         <AstroCardSmall astro={astro}/>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 

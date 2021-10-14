@@ -14,7 +14,7 @@ export default function AstroCardLarge({ astro }: AstroCardLargeProps) {
         <Image source={{ uri: astro.image }} style={styles.astro} />
         <View style={styles.astroInfo}>
             <Text style={styles.astroTitle}>{astro.name}</Text>
-            <Text style={styles.astroVisibility}>Visível da sua localização</Text>
+            <Text style={styles.astroVisibility}>{astro.alt >= 0 ? 'Visível' : 'Não visível'} da sua localização</Text>
         </View>
         <Image source={require("../../assets/gps.png")} style={styles.aim} />
     </View>
