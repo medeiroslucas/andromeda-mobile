@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, FlatList, ActivityIndicator, Platform } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, FlatList, ActivityIndicator, Platform, TouchableHighlight } from 'react-native';
 import AstroCardSmall from '../../components/AstroCardSmall';
 import { getLocation } from '../../services/getLocation';
 import { getAstros } from '../../services/getAstros';
@@ -10,7 +10,20 @@ type emptyListType = {
   astros: string[]
 }[];
 
-export default function Home() {
+const translate: Record<string, string> = {
+  "jupiter": "Júpiter",
+  "mars": "Marte",
+  "mercury": "Mercúrio",
+  "moon": "Lua",
+  "neptune": "Netuno",
+  "saturn": "Saturno",
+  "uranus": "Urânio",
+  "venus": "Vênus",
+  "planet": "Planeta",
+  "satellite": "Satélite",
+}
+
+export default function Home({ navigation } : any) {
   const emptyList: emptyListType = [];
   const emptyCoord = {}
 
@@ -21,9 +34,11 @@ export default function Home() {
   useEffect(() => {
     async function getData() {
       const astros = await getAstros();
+      console.log(astros)
       setCategoryList(astros)
   
       const location = await getLocation();
+      console.log(location) 
       setCoords(location)
     }
 
@@ -32,7 +47,9 @@ export default function Home() {
 
   const renderItem = ({ item } : {item: string}) => {
     return (
-      <AstroCardSmall astro={item}/>
+      <TouchableHighlight onPress={() => navigation.navigate('Detalhes', {astro: translate[item], previousScreen: 'Início'})}>
+        <AstroCardSmall astro={translate[item]}/>
+      </TouchableHighlight>
     );
   }
 

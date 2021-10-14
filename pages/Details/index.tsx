@@ -1,10 +1,19 @@
 import React from 'react';
-import { Image, ImageBackground, ScrollView, Text, View } from 'react-native';
+import { Image, ImageBackground, ScrollView, Text, View, TouchableHighlight } from 'react-native';
 import { ArrowLeft, RotateCw } from 'react-native-feather';
 
 import { styles } from './styles';
 
-export default function Details() {
+export default function Details({ route, navigation } : any) {
+    const back = route.params.previousScreen
+
+    const astro = route.params.astro
+    const azm = "+143º 12’ 38.64’’"
+    const alt = "+16º 29’ 55.70’’"
+
+    console.log(astro)
+    console.log(azm)
+    console.log(alt)
     return(
         <ImageBackground 
             source={{uri: "https://andromeda-pi2.s3.sa-east-1.amazonaws.com/background.png"}} 
@@ -13,7 +22,9 @@ export default function Details() {
         >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <ArrowLeft color="white"/>
+                    <TouchableHighlight onPress={() => navigation.navigate(back)}>
+                      <ArrowLeft color="white"/>
+                    </TouchableHighlight>
                     <Text style={styles.infoDatetime}>21/09/2021 8:00</Text>
                     <RotateCw color="white"/>
                 </View>
@@ -21,13 +32,13 @@ export default function Details() {
             <ScrollView>
                 <View style={styles.astroHeader}>
                     <Image source={require("../../assets/planet.png")} style={styles.astroImage} />
-                    <Text style={styles.astroPositionTitle}> AZM: <Text style={styles.astroPositionValue}>+143º 12’ 38.64’’</Text> </Text>
-                    <Text style={styles.astroPositionTitle}> ALT: <Text style={styles.astroPositionValue}>+16º 29’ 55.70’’</Text> </Text>
+                    <Text style={styles.astroPositionTitle}> AZM: <Text style={styles.astroPositionValue}>{azm}</Text> </Text>
+                    <Text style={styles.astroPositionTitle}> ALT: <Text style={styles.astroPositionValue}>{alt}</Text> </Text>
                 </View>
 
                 <View style={styles.astroInfo}>
                     <View style={styles.container}>
-                        <Text style={styles.astroTitle}>Marte</Text>
+                        <Text style={styles.astroTitle}>{astro}</Text>
                         <View style={styles.astroDescription}>
                             <Text style={styles.astroCategory}>Planeta</Text>
                             <View style={styles.astroDistance}>

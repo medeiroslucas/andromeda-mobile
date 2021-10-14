@@ -14,13 +14,14 @@ export default function App() {
     <>
       <StatusBar />
       <NavigationContainer>
-        <Tab.Navigator 
+        <Tab.Navigator
+          initialRouteName="Início"
           screenOptions={{
-            headerShown: false, 
+            headerShown: false,
             // tabBarBackground: () => (
-              
+            
         }}>
-          <Tab.Screen 
+          <Tab.Screen
             name="Detalhes" 
             component={Details}
             options={{
