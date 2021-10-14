@@ -10,7 +10,7 @@ export function moveDown(coord: number): number {
 }
 
 export function moveLeft(coord: number): number {
-    return coord + MIN_DEG_AZ;
+    return coord - MIN_DEG_AZ;
 }
 
 export function moveRight(coord: number): number {

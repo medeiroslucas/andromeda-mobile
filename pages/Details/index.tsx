@@ -16,6 +16,8 @@ export default function Details({ route, navigation }: any) {
             'Aguarde',
             `Posicionando telescópio em direção a ${astro.name}, nas coordenadas Az: ${astro.az} Alt: ${astro.alt}.`
         )
+        setAltWthMovement(astro.alt);
+        setAzWithMovement(astro.az);
     }
 
     function handleMoveUp() {
