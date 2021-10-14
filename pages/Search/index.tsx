@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, TextInput, Pressable, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Search as SearchIcon } from 'react-native-feather';
 import { Astro, AstroCategories } from '../../astros';
 import { getAstros } from '../../services/getAstros';
@@ -48,6 +48,17 @@ export default function Search({ navigation }: any) {
     setSearchList(filteredList)
   }
 
+  function handleFilterByVisible() {
+    let filteredList: Astro[] = [];
+    
+    categoryList?.map(category => {
+      const filterAux = category.astros.filter(astro => astro.alt >= 0);
+      filterAux.map(astro => filteredList.push(astro))
+    });
+
+    setSearchList(filteredList)
+  }
+
   return (
     <ImageBackground source={{uri: "https://andromeda-pi2.s3.sa-east-1.amazonaws.com/background.png"}} resizeMode="cover" style={styles.image}>
       <ScrollView style={styles.container}>
@@ -60,12 +71,12 @@ export default function Search({ navigation }: any) {
           </View>
 
           <View style={styles.filtersSection}>
-            <Pressable style={styles.filterButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.filterButton} onPress={handleFilterByVisible}>
               <Text style={styles.filterTitle}>Astros Visíveis</Text>
-            </Pressable>
-            <Pressable style={styles.filterButton} onPress={() => {}}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.filterButton} onPress={getData}>
               <Text style={styles.filterTitle}>Todos os Astros</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
 
           {searchList && searchList.map(astro =>
