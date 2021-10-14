@@ -34,14 +34,14 @@ export const styles = StyleSheet.create({
   },
 
   astroTitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     fontWeight: '500',
     marginBottom: 8
   },
 
   astroVisibility: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#fff',
   }
 });

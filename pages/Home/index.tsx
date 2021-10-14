@@ -1,54 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, FlatList, ActivityIndicator, Platform, TouchableHighlight } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TouchableHighlight } from 'react-native';
 import AstroCardSmall from '../../components/AstroCardSmall';
 import { getLocation } from '../../services/getLocation';
 import { getAstros } from '../../services/getAstros';
 import { styles } from './styles';
-
-type emptyListType = {
-  name: string,
-  astros: string[]
-}[];
-
-const translate: Record<string, string> = {
-  "jupiter": "Júpiter",
-  "mars": "Marte",
-  "mercury": "Mercúrio",
-  "moon": "Lua",
-  "neptune": "Netuno",
-  "saturn": "Saturno",
-  "uranus": "Urânio",
-  "venus": "Vênus",
-  "planet": "Planeta",
-  "satellite": "Satélite",
-}
+import { Astro, AstroCategories } from '../../astros';
 
 export default function Home({ navigation }: any) {
-  const emptyList: emptyListType = [];
+  const emptyList: AstroCategories[] = [];
   const emptyCoord = {}
 
   const [isLoading, setLoading] = useState(true);
   const [coords, setCoords] = useState(emptyCoord);
-  const [categoryList, setCategoryList] = useState<emptyListType | undefined>(emptyList);
+  const [categoryList, setCategoryList] = useState<AstroCategories[] | undefined>(emptyList);
 
   useEffect(() => {
     async function getData() {
       const astros = await getAstros();
-      console.log(astros)
       setCategoryList(astros)
   
       const location = await getLocation();
-      console.log(location) 
       setCoords(location)
     }
 
     getData();
   }, []);
 
-  const renderItem = ({ item } : {item: string}) => {
+  const renderItem = (astro: Astro) => {
     return (
-      <TouchableHighlight onPress={() => navigation.navigate('Detalhes')}>
-        <AstroCardSmall astro={translate[item]}/>
+      <TouchableHighlight key={astro.name} onPress={() => navigation.navigate('Detalhes', { astro })}>
+        <AstroCardSmall astro={astro}/>
       </TouchableHighlight>
     );
   }
@@ -62,16 +43,12 @@ export default function Home({ navigation }: any) {
 
           {categoryList && categoryList.map(category => (
             <View key={category.name} style={styles.categoryContainer}>
-            <Text style={styles.categoryTitle}>{category.name}</Text>
-            <FlatList
-              data={category.astros}
-              renderItem={renderItem}
-              keyExtractor={item => item}
-              horizontal
-            />
-          </View>
+              <Text style={styles.categoryTitle}>{category.name}</Text>
+              <ScrollView horizontal>
+                {category.astros.map(astro => ( renderItem(astro) ))}
+              </ScrollView>
+            </View>
           ))}
-          
       </ScrollView>
     </ImageBackground>
   );

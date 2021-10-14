@@ -1,14 +1,19 @@
 import React from 'react';
 import { Text, View, Image } from 'react-native';
+import { Astro } from '../../astros';
 
 import { styles } from './styles';
 
-export default function AstroCardLarge() {
+type AstroCardLargeProps = {
+  astro: Astro
+}
+
+export default function AstroCardLarge({ astro }: AstroCardLargeProps) {
   return (
     <View style={styles.card}>
-        <Image source={require("../../assets/planet.png")} style={styles.astro} />
+        <Image source={{ uri: astro.image }} style={styles.astro} />
         <View style={styles.astroInfo}>
-            <Text style={styles.astroTitle}>Mercúrio</Text>
+            <Text style={styles.astroTitle}>{astro.name}</Text>
             <Text style={styles.astroVisibility}>Visível da sua localização</Text>
         </View>
         <Image source={require("../../assets/gps.png")} style={styles.aim} />

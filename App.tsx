@@ -18,7 +18,7 @@ function HomeStack() {
         headerShown: false, 
       }}
     >      
-      <Stack.Screen name="Início" component={Home} />  
+      <Stack.Screen name="Home" component={Home} />  
       <Stack.Screen name="Detalhes" component={Details} />  
     </Stack.Navigator>  
   );
@@ -31,7 +31,7 @@ function SearchStack() {
         headerShown: false, 
       }}
     >      
-      <Stack.Screen name="Buscar" component={Search} />  
+      <Stack.Screen name="Search" component={Search} />  
       <Stack.Screen name="Details" component={Details} />  
     </Stack.Navigator>  
   );
