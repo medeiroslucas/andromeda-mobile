@@ -18,7 +18,7 @@ export default function Search({ navigation }: any) {
   }, []);
 
   async function getData() {
-    const astros = await getAstros();
+    const astros = await getAstros({latitude: 0, longitude: 0});
     setCategoryList(astros)
 
     let auxAstros: Astro[] = [];

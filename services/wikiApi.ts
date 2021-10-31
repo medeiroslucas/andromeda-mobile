@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const api = axios.create({
+const api = axios.create({
     baseURL: "https://pt.wikipedia.org/w/api.php",
     params: {
         action: 'query',

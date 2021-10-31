@@ -1,13 +1,17 @@
+import axios from "axios";
 import { categoryList } from "../astros";
+import { UserCoords } from "./getUserLocation";
 
-export const getAstros = async () => {
-    try {
-        //const response = await fetch('link');
-        //const json = await response.json();
-        //setData(json);
+const api = axios.create({
+    // baseURL: "https://andromeda-api.com",
+});
 
-        return categoryList;
-    } catch (error) {
-        console.error(error);
-    }
+export const getAstros = async ({ latitude, longitude}: UserCoords) => {
+    // await api.get('').catch((error) => {
+    //     throw new Error(error);        
+    // }).then((astros) => {
+    //     return astros
+    // });
+
+    return categoryList;
 }

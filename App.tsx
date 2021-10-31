@@ -74,7 +74,7 @@ export default function App() {
       <StatusBar />
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Calibration" options={{headerShown: false}} component={Calibration} />
+          {/* <Stack.Screen name="Calibration" options={{headerShown: false}} component={Calibration} /> */}
           <Stack.Screen name="Home" options={{headerShown: false}} component={HomeTabs} />
         </Stack.Navigator>
       </NavigationContainer>

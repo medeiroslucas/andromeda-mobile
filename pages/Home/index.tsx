@@ -1,30 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+
 import AstroCardSmall from '../../components/AstroCardSmall';
-import { getLocation } from '../../services/getLocation';
+import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
 import { getAstros } from '../../services/getAstros';
-import { styles } from './styles';
 import { Astro, AstroCategories } from '../../astros';
+import { styles } from './styles';
 
 export default function Home({ navigation }: any) {
   const emptyList: AstroCategories[] = [];
-  const emptyCoord = {}
 
   const [isLoading, setLoading] = useState(true);
-  const [coords, setCoords] = useState(emptyCoord);
   const [categoryList, setCategoryList] = useState<AstroCategories[] | undefined>(emptyList);
 
   useEffect(() => {
-    async function getData() {
-      const astros = await getAstros();
-      setCategoryList(astros)
-  
-      const location = await getLocation();
-      setCoords(location)
-    }
-
-    getData();
+    handleUserLocationPermission()
   }, []);
+
+  const handleUserLocationPermission = async() => {
+    await getUserLocation()
+      .catch(_ => {
+        Alert.alert(
+          'Acessar localização',
+          'Para o uso do aplicativo, é necessário o acesso à sua localização para sabermos quais astros são visiveis da sua posição.',
+          [{ text: 'OK', onPress: () => { getData() } }],
+          { cancelable: false }
+        )
+      })
+      .then(userLocation => userLocation && setUserLocation(userLocation));
+  }
+
+  const setUserLocation = async (userLocation: UserCoords) => {
+    if (userLocation) {
+      const astros = await getAstros(userLocation);
+      setCategoryList(astros)
+    }
+    
+    setLoading(false)
+  }
+
+  const getData = async () => {
+    await requestUserLocationPermission()
+      .catch((error) => {
+        Alert.alert('', error)
+      })
+      .then(userLocation => userLocation && setUserLocation(userLocation));
+  }
 
   const renderItem = (astro: Astro) => {
     return (
@@ -39,8 +60,12 @@ export default function Home({ navigation }: any) {
       <ScrollView style={styles.container}>
           <Text style={styles.welcomeTitle}>Boa Noite</Text>
           <Text style={styles.welcomeCaption}>O que vamos explorar hoje?</Text>
-          <Text style={styles.categoriesPresentation}>Navegue por Categorias</Text>
 
+          {isLoading ? 
+            <ActivityIndicator size="large" color="#fff" style={{marginTop: 80}}/> 
+            :
+            <Text style={styles.categoriesPresentation}>Navegue por Categorias</Text>
+          }
           {categoryList && categoryList.map(category => (
             <View key={category.name} style={styles.categoryContainer}>
               <Text style={styles.categoryTitle}>{category.name}</Text>
