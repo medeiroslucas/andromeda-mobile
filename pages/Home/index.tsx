@@ -14,37 +14,15 @@ export default function Home({ navigation }: any) {
   const [categoryList, setCategoryList] = useState<AstroCategories[] | undefined>(emptyList);
 
   useEffect(() => {
-    handleUserLocationPermission()
+    setUserLocation()
   }, []);
 
-  const handleUserLocationPermission = async() => {
-    await getUserLocation()
-      .catch(_ => {
-        Alert.alert(
-          'Acessar localização',
-          'Para o uso do aplicativo, é necessário o acesso à sua localização para sabermos quais astros são visiveis da sua posição.',
-          [{ text: 'OK', onPress: () => { getData() } }],
-          { cancelable: false }
-        )
-      })
-      .then(userLocation => userLocation && setUserLocation(userLocation));
-  }
-
-  const setUserLocation = async (userLocation: UserCoords) => {
-    if (userLocation) {
-      const astros = await getAstros(userLocation);
-      setCategoryList(astros)
-    }
-    
-    setLoading(false)
-  }
-
-  const getData = async () => {
-    await requestUserLocationPermission()
-      .catch((error) => {
-        Alert.alert('', error)
-      })
-      .then(userLocation => userLocation && setUserLocation(userLocation));
+  const setUserLocation = async () => {
+    const astros = await getAstros({
+      latitude: 0,
+      longitude: 0
+    });
+    setCategoryList(astros)
   }
 
   const renderItem = (astro: Astro) => {
@@ -60,12 +38,7 @@ export default function Home({ navigation }: any) {
       <ScrollView style={styles.container}>
           <Text style={styles.welcomeTitle}>Boa Noite</Text>
           <Text style={styles.welcomeCaption}>O que vamos explorar hoje?</Text>
-
-          {isLoading ? 
-            <ActivityIndicator size="large" color="#fff" style={{marginTop: 80}}/> 
-            :
-            <Text style={styles.categoriesPresentation}>Navegue por Categorias</Text>
-          }
+          <Text style={styles.categoriesPresentation}>Navegue por Categorias</Text>
           {categoryList && categoryList.map(category => (
             <View key={category.name} style={styles.categoryContainer}>
               <Text style={styles.categoryTitle}>{category.name}</Text>

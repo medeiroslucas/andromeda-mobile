@@ -6,7 +6,7 @@ const api = axios.create({
     // baseURL: "https://andromeda-api.com",
 });
 
-export const getAstros = async ({ latitude, longitude}: UserCoords) => {
+export const getAstros = async ({ latitude, longitude }: UserCoords) => {
     // await api.get('').catch((error) => {
     //     throw new Error(error);        
     // }).then((astros) => {
