@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, ImageBackground, ScrollView, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { ArrowLeft, RotateCw } from 'react-native-feather';
+import { ArrowLeft } from 'react-native-feather';
 import { moveDown, moveLeft, moveRight, moveUp } from '../../services/telescopeAdjustments';
 
 import { styles } from './styles';
@@ -22,21 +22,25 @@ export default function Details({ route, navigation }: any) {
 
     function handleMoveUp() {
         const result = moveUp(altWthMovement);
+        console.log('Up: ' + result);
         setAltWthMovement(result);
     }
     
     function handleMoveDown() {
         const result = moveDown(altWthMovement);
+        console.log('Down: ' + result);
         setAltWthMovement(result);
     }
     
     function handleMoveLeft() {
         const result = moveLeft(azWithMovement);
+        console.log('Left: ' + result);
         setAzWithMovement(result);
     }
     
     function handleMoveRight() {
         const result = moveRight(azWithMovement);
+        console.log('Right: ' + result);
         setAzWithMovement(result);
     }
 
@@ -58,10 +62,10 @@ export default function Details({ route, navigation }: any) {
             <ScrollView>
                 <View style={styles.astroHeader}>
                     <Image source={{uri: astro.image }} style={styles.astroImage} />
-                    <Text style={styles.astroPositionTitle}> AZ: <Text style={styles.astroPositionValue}>{azWithMovement}</Text> </Text>
-                    <Text style={styles.astroPositionTitle}> ALT: <Text style={styles.astroPositionValue}>{altWthMovement}</Text> </Text>
+                    <Text style={styles.astroPositionTitle}> AZ: <Text style={styles.astroPositionValue}>{azWithMovement.toFixed(2)}</Text> </Text>
+                    <Text style={styles.astroPositionTitle}> ALT: <Text style={styles.astroPositionValue}>{altWthMovement.toFixed(2)}</Text> </Text>
                     
-                    {astro.alt >= 0 ? 
+                    
                         <>
                             <TouchableOpacity style={styles.astroPositionButton} onPress={handleAstroPosition}>
                                 <Text style={styles.astroPositionButtontext}>POSICIONAR TELESCÓPIO</Text>
@@ -81,9 +85,7 @@ export default function Details({ route, navigation }: any) {
                                 </TouchableOpacity>
                             </View>
                         </>
-                        :
-                        <></>
-                    }
+                        
                 </View>
 
                 <View style={styles.astroInfo}>

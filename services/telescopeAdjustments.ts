@@ -1,5 +1,5 @@
-const MIN_DEG_AZ = 0.1125;
-const MIN_DEG_ALT  = 0.1125;
+export const MIN_DEG_AZ = 0.1125;
+export const MIN_DEG_ALT  = 0.1125;
 
 export function moveUp(coord: number): number {
     return coord + MIN_DEG_ALT;

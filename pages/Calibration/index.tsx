@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, Text, View, TouchableOpacity, Picker } from 'react-native';
+import { Image, ImageBackground, Text, View, TouchableOpacity, Alert, Picker, ActivityIndicator } from 'react-native';
 import { getAstros } from '../../services/getAstros';
+import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
+import { moveDown, moveLeft, moveRight, moveUp } from '../../services/telescopeAdjustments';
 
 import { styles } from './styles';
 
@@ -13,14 +15,33 @@ export default function Calibration({ route, navigation }: any) {
     const emptyList: SelectableAstro[] = [];
     const [selectableAstroList, setSelectableAstroList] = useState<SelectableAstro[] | undefined>(emptyList);
     const [selectedValue, setSelectedValue] = useState("Lua");
+    const [isLoading, setLoading] = useState(true);
 
     const [dx, setDx] = useState(0);
     const [dy, setDy] = useState(0);
 
     useEffect(() => {
-      async function getData() {
+      handleUserLocationPermission();
+    }, []);
+
+    const handleUserLocationPermission = async() => {
+      await getUserLocation()
+        .catch(_ => {
+          Alert.alert(
+            'Acessar localização',
+            'Para o uso do aplicativo, é necessário o acesso à sua localização para sabermos quais astros são visiveis da sua posição.',
+            [{ text: 'OK', onPress: () => { getData() } }],
+            { cancelable: false }
+          )
+        })
+        .then(userLocation => userLocation && setUserLocation(userLocation));
+    }
+
+    const setUserLocation = async (userLocation: UserCoords) => {
+      if (userLocation) {
+        console.log(userLocation)
+        const astros = await getAstros(userLocation);
         const list: SelectableAstro[] = []
-        const astros = await getAstros();
         if(astros) {
           for(const category of astros) {
             for(const astroList of category.astros) {
@@ -33,9 +54,17 @@ export default function Calibration({ route, navigation }: any) {
           setSelectableAstroList(list);
         }
       }
+      
+      setLoading(false)
+    }
 
-      getData();
-    }, []);
+    const getData = async () => {
+      await requestUserLocationPermission()
+        .catch((error) => {
+          Alert.alert('', error)
+        })
+        .then(userLocation => userLocation && setUserLocation(userLocation));
+    }
 
     function handleAstroPosition() {
         // pega as coordenadas do astro
@@ -45,25 +74,25 @@ export default function Calibration({ route, navigation }: any) {
     }
 
     function handleMoveUp() {
-        const newDx = dx + 1;
+        const newDx = moveUp(dx);
         console.log('Deslocamento para cima. dx = ' + newDx);
         setDx(newDx);
     }
     
     function handleMoveDown() {
-        const newDx = dx - 1;
+        const newDx = moveDown(dx);
         console.log('Deslocamento para baixo. dx = ' + newDx);
         setDx(newDx);
     }
     
     function handleMoveLeft() {
-        const newDy = dy - 1;
+        const newDy = moveLeft(dy);
         console.log('Deslocamento para esquerda. dy = ' + newDy);
         setDy(newDy);
     }
     
     function handleMoveRight() {
-        const newDy = dy + 1;
+        const newDy = moveRight(dy);
         console.log('Deslocamento para direita. dy = ' + newDy);
         setDy(newDy);
     }
@@ -97,52 +126,58 @@ export default function Calibration({ route, navigation }: any) {
           resizeMode="cover" 
           style={styles.image}
         >
-          <View style={{flex: 1}}>
-            <Text style={{color: 'white', textAlign: "center", fontSize: 18}}>Selecione um astro visível como referência:</Text>
-          </View>
-          <View style={{flex: 1, alignItems: 'center'}}>
-            <Picker
-              selectedValue={selectedValue}
-              style={{ height: 50, width: 150 }}
-              onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-            >
-              {selectableAstroList && selectableAstroList.map(astro => {
-                return <Picker.Item label={astro.name} value={astro.name} />
-              })}
-            </Picker>
-          </View>
-          <View style={{flex: 3, alignItems: 'center'}}>
-            <Image source={{uri: getImage(selectedValue) }} style={styles.astroImage} />
-          </View>
-          <View style={{flex: 3}}>
-            <View style={styles.astroHeader}>
-              <View style={styles.telescopeControl}>
-                <TouchableOpacity style={styles.arrowUp} onPress={handleMoveUp}>
-                  <Image source={require("../../assets/up.png")} style={styles.arrow} /> 
+          {isLoading ? 
+            <ActivityIndicator size="large" color="#fff" style={{marginTop: 80}}/> 
+            :
+            <>
+              <View style={{flex: 1}}>
+                <Text style={{color: 'white', textAlign: "center", fontSize: 18}}>Selecione um astro visível como referência:</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'center'}}>
+                <Picker
+                  selectedValue={selectedValue}
+                  style={{ height: 50, width: 150 }}
+                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                >
+                  {selectableAstroList && selectableAstroList.map(astro => {
+                    return <Picker.Item label={astro.name} value={astro.name} />
+                  })}
+                </Picker>
+              </View>
+              <View style={{flex: 3, alignItems: 'center'}}>
+                <Image source={{uri: getImage(selectedValue) }} style={styles.astroImage} />
+              </View>
+              <View style={{flex: 3}}>
+                <View style={styles.astroHeader}>
+                  <View style={styles.telescopeControl}>
+                    <TouchableOpacity style={styles.arrowUp} onPress={handleMoveUp}>
+                      <Image source={require("../../assets/up.png")} style={styles.arrow} /> 
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.arrowLeft} onPress={handleMoveLeft}>
+                      <Image source={require("../../assets/left.png")} style={styles.arrow}  />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.arrowRight} onPress={handleMoveRight}>
+                      <Image source={require("../../assets/right.png")} style={styles.arrow}  />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.arrowDown} onPress={handleMoveDown}>
+                      <Image source={require("../../assets/down.png")} style={styles.arrow}  />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+              <View style={{flex: 4, alignItems: 'center'}}>
+                <TouchableOpacity style={styles.astroPositionButton} onPress={handleAstroPosition}>
+                  <Text style={styles.astroPositionButtontext}>POSICIONAR TELESCÓPIO</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.arrowLeft} onPress={handleMoveLeft}>
-                  <Image source={require("../../assets/left.png")} style={styles.arrow}  />
+                <TouchableOpacity style={styles.astroPositionButton} onPress={finishButton}>
+                  <Text style={styles.astroPositionButtontext}>FINALIZAR</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.arrowRight} onPress={handleMoveRight}>
-                  <Image source={require("../../assets/right.png")} style={styles.arrow}  />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.arrowDown} onPress={handleMoveDown}>
-                  <Image source={require("../../assets/down.png")} style={styles.arrow}  />
+                <TouchableOpacity style={styles.astroPositionButton} onPress={cancelButton}>
+                  <Text style={styles.astroPositionButtontext}>CANCELAR</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </View>
-          <View style={{flex: 4, alignItems: 'center'}}>
-            <TouchableOpacity style={styles.astroPositionButton} onPress={handleAstroPosition}>
-              <Text style={styles.astroPositionButtontext}>POSICIONAR TELESCÓPIO</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.astroPositionButton} onPress={finishButton}>
-              <Text style={styles.astroPositionButtontext}>FINALIZAR</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.astroPositionButton} onPress={cancelButton}>
-              <Text style={styles.astroPositionButtontext}>CANCELAR</Text>
-            </TouchableOpacity>
-          </View>
+            </>
+          }
         </ImageBackground>
       </View>
     )
