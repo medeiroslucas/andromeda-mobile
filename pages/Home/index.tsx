@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 
 import AstroCardSmall from '../../components/AstroCardSmall';
-import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
+import { getUserLocation, UserCoords } from '../../services/getUserLocation';
 import { getAstros } from '../../services/getAstros';
 import { Astro, AstroCategories } from '../../astros';
 import { styles } from './styles';
@@ -10,19 +10,32 @@ import { styles } from './styles';
 export default function Home({ navigation }: any) {
   const emptyList: AstroCategories[] = [];
 
-  const [isLoading, setLoading] = useState(true);
-  const [categoryList, setCategoryList] = useState<AstroCategories[] | undefined>(emptyList);
+  const [satelliteList, setSatelliteList] = useState<AstroCategories[] | undefined>(emptyList);
+  const [planetList, setPlanetList] = useState<AstroCategories[] | undefined>(emptyList);
 
   useEffect(() => {
     setUserLocation()
   }, []);
 
   const setUserLocation = async () => {
-    const astros = await getAstros({
-      latitude: 0,
-      longitude: 0
-    });
-    setCategoryList(astros)
+    await getUserLocation()
+        .catch(_ => {
+          Alert.alert(
+            'Acessar localização',
+            'Para o uso do aplicativo, é necessário o acesso à sua localização para sabermos quais astros são visiveis da sua posição.',
+            [{ text: 'OK' }],
+            { cancelable: false }
+          )
+        })
+        .then(async (userLocation: UserCoords) => {
+          const astros = await getAstros(userLocation);
+          setSatelliteList(astros.filter(astro => {
+            return astro.category === 'satellite'
+          }))
+          setPlanetList(astros.filter(astro => {
+            return astro.category === 'planet'
+          }))
+        })
   }
 
   const renderItem = (astro: Astro) => {
@@ -39,14 +52,18 @@ export default function Home({ navigation }: any) {
           <Text style={styles.welcomeTitle}>Boa Noite</Text>
           <Text style={styles.welcomeCaption}>O que vamos explorar hoje?</Text>
           <Text style={styles.categoriesPresentation}>Navegue por Categorias</Text>
-          {categoryList && categoryList.map(category => (
-            <View key={category.name} style={styles.categoryContainer}>
-              <Text style={styles.categoryTitle}>{category.name}</Text>
-              <ScrollView horizontal>
-                {category.astros.map(astro => ( renderItem(astro) ))}
-              </ScrollView>
-            </View>
-          ))}
+          <View key={'Planetas'} style={styles.categoryContainer}>
+            <Text style={styles.categoryTitle}>Planetas</Text>
+            <ScrollView horizontal>
+              {planetList.map(astro => ( renderItem(astro) ))}
+            </ScrollView>
+          </View>
+          <View key={'Satélites'} style={styles.categoryContainer}>
+            <Text style={styles.categoryTitle}>Satélites</Text>
+            <ScrollView horizontal>
+              {satelliteList.map(astro => ( renderItem(astro) ))}
+            </ScrollView>
+          </View>
       </ScrollView>
     </ImageBackground>
   );

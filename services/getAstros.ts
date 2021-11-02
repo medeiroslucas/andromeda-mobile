@@ -1,17 +1,14 @@
-import axios from "axios";
-import { categoryList } from "../astros";
 import { UserCoords } from "./getUserLocation";
 
-const api = axios.create({
-    // baseURL: "https://andromeda-api.com",
-});
-
 export const getAstros = async ({ latitude, longitude }: UserCoords) => {
-    // await api.get('').catch((error) => {
-    //     throw new Error(error);        
-    // }).then((astros) => {
-    //     return astros
-    // });
-
-    return categoryList;
-}
+  try {
+    const response = await fetch(`https://staging-pi2-andromeda-server.herokuapp.com/astro_list?lat=${latitude}&long=${longitude}`, {
+      method: 'GET'
+    });
+    const json = await response.json();
+    const astros = json.astros;
+    return astros;
+  } catch (error) {
+    console.error(error);
+  }
+};
