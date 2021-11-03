@@ -27,13 +27,12 @@ export const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: 24,
         marginBottom: 32
     },
 
     astroImage: {
-        height: 200,
-        width: 200,
+        height: 150,
+        width: 150,
     },
 
     astroPositionTitle: {
@@ -47,7 +46,7 @@ export const styles = StyleSheet.create({
     },
 
     astroPositionButton: {
-        marginVertical: 24,
+        marginVertical: 10,
         backgroundColor: '#5833A5',
         paddingHorizontal: 16,
         paddingVertical: 8,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, Text, View, TouchableOpacity, Alert, Picker, ActivityIndicator } from 'react-native';
+import { Image, ImageBackground, Text, View, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { getAstros } from '../../services/getAstros';
 import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
 import { moveDown, moveLeft, moveRight, moveUp } from '../../services/telescopeAdjustments';
@@ -135,19 +136,18 @@ export default function Calibration({ route, navigation }: any) {
               <View style={{flex: 1, alignItems: 'center'}}>
                 <Picker
                   selectedValue={selectedValue}
-                  style={{ height: 50, width: 150 }}
+                  style={{ height: 50, width: 150, backgroundColor: 'white' }}
                   onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                 >
                   {selectableAstroList && selectableAstroList.map(astro => {
-                    return <Picker.Item label={astroList[astro.name].name} value={astroList[astro.name].name} />
+                    return <Picker.Item key={astroList[astro.name].name} label={astroList[astro.name].name} value={astroList[astro.name].name} />
                   })}
                 </Picker>
               </View>
-              <View style={{flex: 3, alignItems: 'center'}}>
+              <View style={{flex: 3, alignItems: 'center', justifyContent: 'center'}}>
                 <Image source={{uri: getImage(selectedValue) }} style={styles.astroImage} />
               </View>
-              <View style={{flex: 3}}>
-                <View style={styles.astroHeader}>
+              <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
                   <View style={styles.telescopeControl}>
                     <TouchableOpacity style={styles.arrowUp} onPress={handleMoveUp}>
                       <Image source={require("../../assets/up.png")} style={styles.arrow} /> 
@@ -162,9 +162,8 @@ export default function Calibration({ route, navigation }: any) {
                       <Image source={require("../../assets/down.png")} style={styles.arrow}  />
                     </TouchableOpacity>
                   </View>
-                </View>
               </View>
-              <View style={{flex: 4, alignItems: 'center'}}>
+              <View style={{flex: 4, alignItems: 'center', justifyContent: 'center'}}>
                 <TouchableOpacity style={styles.astroPositionButton} onPress={handleAstroPosition}>
                   <Text style={styles.astroPositionButtontext}>POSICIONAR TELESCÓPIO</Text>
                 </TouchableOpacity>
