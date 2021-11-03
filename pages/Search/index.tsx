@@ -1,33 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Search as SearchIcon } from 'react-native-feather';
-import { Astro, AstroCategories } from '../../astros';
 import { getAstros } from '../../services/getAstros';
+import { astroList } from '../../astros';
+import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
 
 import AstroCardLarge from './../../components/AstroCardLarge';
 import { styles } from './styles';
 
+type SelectableAstro = {
+  name: string,
+  image: string
+}
+
 export default function Search({ navigation }: any) {
-  const emptyList: AstroCategories[] = [];
-  
-  const [categoryList, setCategoryList] = useState<AstroCategories[] | undefined>(emptyList);
-  const [searchList, setSearchList] = useState<Astro[] | undefined>([]);
-  
+  const [selectableAstroList, setSelectableAstroList] = useState(null);
+  const [searchList, setSearchList] = useState(null);
+
   useEffect(() => {
-    getData();
+    handleUserLocationPermission();
   }, []);
 
-  async function getData() {
-    const astros = await getAstros({latitude: 0, longitude: 0});
-    setCategoryList(astros)
+    const handleUserLocationPermission = async() => {
+      await getUserLocation()
+        .catch(_ => {
+          Alert.alert(
+            'Acessar localização',
+            'Para o uso do aplicativo, é necessário o acesso à sua localização para sabermos quais astros são visiveis da sua posição.',
+            [{ text: 'OK', onPress: () => { getData() } }],
+            { cancelable: false }
+          )
+        })
+        .then(userLocation => userLocation && setUserLocation(userLocation));
+    }
 
-    let auxAstros: Astro[] = [];
-    astros?.map(category => {
-      category.astros.map(astro => auxAstros.push(astro))
-    });
+    const setUserLocation = async (userLocation: UserCoords) => {
+      if (userLocation) {
+        //console.log(userLocation);
+        const astros = await getAstros(userLocation);
+        console.log(astros)
+        const list: SelectableAstro[] = []
+        if(astros) {
+          setSelectableAstroList(astros);
+          setSearchList(astros);
+        }
+      }
+    }
 
-    setSearchList(auxAstros);
-  }
+    const getData = async () => {
+      await requestUserLocationPermission()
+        .catch((error) => {
+          Alert.alert('', error)
+        })
+        .then(userLocation => userLocation && setUserLocation(userLocation));
+    }
 
   const renderItem = (astro: Astro) => {
     return (
@@ -38,25 +64,15 @@ export default function Search({ navigation }: any) {
   }
 
   function onChangeSearch(text: string) {
-    let filteredList: Astro[] = [];
-    
-    categoryList?.map(category => {
-      const filterAux = category.astros.filter(astro => astro.name.toLowerCase().includes(text.toLowerCase()))
-      filterAux.map(astro => filteredList.push(astro))
-    });
-
-    setSearchList(filteredList)
+    setSearchList(selectableAstroList.filter(astro => astroList[astro.name].name.toLowerCase().includes(text.toLowerCase())))
   }
 
   function handleFilterByVisible() {
-    let filteredList: Astro[] = [];
-    
-    categoryList?.map(category => {
-      const filterAux = category.astros.filter(astro => astro.alt >= 0);
-      filterAux.map(astro => filteredList.push(astro))
-    });
+    setSearchList(selectableAstroList.filter(astro => astro.alt >= 0))
+  }
 
-    setSearchList(filteredList)
+  function showAll() {
+    setSearchList(selectableAstroList);
   }
 
   return (
@@ -74,7 +90,7 @@ export default function Search({ navigation }: any) {
             <TouchableOpacity style={styles.filterButton} onPress={handleFilterByVisible}>
               <Text style={styles.filterTitle}>Astros Visíveis</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.filterButton} onPress={getData}>
+            <TouchableOpacity style={styles.filterButton} onPress={showAll}>
               <Text style={styles.filterTitle}>Todos os Astros</Text>
             </TouchableOpacity>
           </View>

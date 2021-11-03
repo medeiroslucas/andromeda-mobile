@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Image, ImageBackground, ScrollView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { ArrowLeft } from 'react-native-feather';
 import { moveDown, moveLeft, moveRight, moveUp } from '../../services/telescopeAdjustments';
+import { astroList } from '../../astros';
 
 import { styles } from './styles';
 
@@ -61,7 +62,7 @@ export default function Details({ route, navigation }: any) {
             </View>
             <ScrollView>
                 <View style={styles.astroHeader}>
-                    <Image source={{uri: astro.image }} style={styles.astroImage} />
+                    <Image source={{uri: astroList[astro.name].image }} style={styles.astroImage} />
                     <Text style={styles.astroPositionTitle}> AZ: <Text style={styles.astroPositionValue}>{azWithMovement.toFixed(2)}</Text> </Text>
                     <Text style={styles.astroPositionTitle}> ALT: <Text style={styles.astroPositionValue}>{altWthMovement.toFixed(2)}</Text> </Text>
                     
@@ -90,19 +91,19 @@ export default function Details({ route, navigation }: any) {
 
                 <View style={styles.astroInfo}>
                     <View style={styles.container}>
-                        <Text style={styles.astroTitle}>{astro.name}</Text>
+                        <Text style={styles.astroTitle}>{ astroList[astro.name].name.charAt(0).toUpperCase() + astroList[astro.name].name.slice(1) }</Text>
                         <View style={styles.astroDescription}>
-                            <Text style={styles.astroCategory}>{ astro.category }</Text>
+                            <Text style={styles.astroCategory}>{ astroList[astro.name].category.charAt(0).toUpperCase() + astroList[astro.name].category.slice(1) }</Text>
                         </View>
                         
-                        <Text style={styles.astroMoreInfos}>{ astro.description }</Text>
+                        <Text style={styles.astroMoreInfos}>{ astroList[astro.name].description }</Text>
 
                         <View style={styles.astroGalery}>
                             <Text style={styles.astroGaleryTitle}>Galeria</Text>
                             <ScrollView horizontal>
-                                { astro.galery.map((image: string) => (
-                                    <Image key={image} source={{uri: image }} style={styles.astroGaleryImage} />
-                                )) }                     
+                              { astroList[astro.name].galery.map((image: string) => (
+                                <Image key={image} source={{uri: image }} style={styles.astroGaleryImage} />
+                              ))}
                             </ScrollView>
                         </View>
                     </View>

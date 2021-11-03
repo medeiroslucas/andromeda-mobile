@@ -3,7 +3,7 @@ import { Image, ImageBackground, Text, View, TouchableOpacity, Alert, Picker, Ac
 import { getAstros } from '../../services/getAstros';
 import { getUserLocation, requestUserLocationPermission, UserCoords } from '../../services/getUserLocation';
 import { moveDown, moveLeft, moveRight, moveUp } from '../../services/telescopeAdjustments';
-
+import { astroList } from '../../astros';
 import { styles } from './styles';
 
 type SelectableAstro = {
@@ -11,21 +11,10 @@ type SelectableAstro = {
   image: string
 }
 
-const images = {
-  moon: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/lua-removebg-preview.png',
-  venus: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/venus-removebg-preview.png',
-  mars: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/planet.png',
-  jupiter: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/jupiter-removebg-preview.png',
-  neptune: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/netuno-removebg-preview.png',
-  uranus: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/urano-removebg-preview.png',
-  mercury: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/mercurio-removebg-preview.png',
-  saturn: 'https://andromeda-pi2.s3.sa-east-1.amazonaws.com/saturno-removebg-preview.png'
-}
-
 export default function Calibration({ route, navigation }: any) {
     const emptyList: SelectableAstro[] = [];
     const [selectableAstroList, setSelectableAstroList] = useState<SelectableAstro[] | undefined>(emptyList);
-    const [selectedValue, setSelectedValue] = useState("Moon");
+    const [selectedValue, setSelectedValue] = useState("Lua");
     const [isLoading, setLoading] = useState(true);
 
     const [dx, setDx] = useState(0);
@@ -50,15 +39,15 @@ export default function Calibration({ route, navigation }: any) {
 
     const setUserLocation = async (userLocation: UserCoords) => {
       if (userLocation) {
-        console.log(userLocation);
+        //console.log(userLocation);
         const astros = await getAstros(userLocation);
         console.log(astros)
         const list: SelectableAstro[] = []
         if(astros) {
           for(const astro of astros) {
             list.push({
-              name: astro.name.charAt(0).toUpperCase() + astro.name.slice(1), 
-              image: images[astro.name] 
+              name: astro.name, 
+              image: astroList[astro.name].image
             })
           }
           setSelectableAstroList(list);
@@ -120,8 +109,8 @@ export default function Calibration({ route, navigation }: any) {
     function getImage(selected : string) {
       if(selectableAstroList) {
         for(const astro of selectableAstroList) {
-          if(astro.name === selected) {
-            return astro.image;
+          if(astroList[astro.name].name === selected) {
+            return astroList[astro.name].image;
           }
         }
       }
@@ -150,7 +139,7 @@ export default function Calibration({ route, navigation }: any) {
                   onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                 >
                   {selectableAstroList && selectableAstroList.map(astro => {
-                    return <Picker.Item label={astro.name} value={astro.name} />
+                    return <Picker.Item label={astroList[astro.name].name} value={astroList[astro.name].name} />
                   })}
                 </Picker>
               </View>
